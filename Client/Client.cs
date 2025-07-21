@@ -15,6 +15,17 @@ class Client
             TcpClient client = new TcpClient(serverIp, port);
             NetworkStream stream = client.GetStream();
 
+            // Sending client name to server
+            Random random = new Random();
+            int clientId = random.Next(1, 100);
+            string clientName = "Klient" + clientId;
+            byte[] nameBytes = Encoding.UTF8.GetBytes(clientName);
+            
+            byte[] lengthBytes = BitConverter.GetBytes(nameBytes.Length);
+            stream.Write(lengthBytes, 0, lengthBytes.Length);
+
+            stream.Write(nameBytes, 0, nameBytes.Length);
+
             Console.WriteLine("[Client] connected with server");
 
             //Thread receiving messages
